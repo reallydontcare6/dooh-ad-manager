@@ -74,3 +74,55 @@ This satisfies the requirement for a **basic functional web interface** while ke
 ```bash
 git clone <https://github.com/reallydontcare6/dooh-ad-manager.git>
 cd dooh-ad-manager
+
+---
+
+### 2. Install dependencies
+npm install
+
+### 3. Configure environment variables
+
+Create a .env file in the project root and add:
+
+DATABASE_URL="postgresql://postgres:dmc12345@localhost:5432/dooh_db"
+
+
+### 4. Run database migrations
+npx prisma migrate dev
+
+
+This command creates all required tables in the PostgreSQL database.
+
+### 5. Start the backend server
+npm run dev
+
+
+The server will run at:
+
+http://localhost:3000
+
+
+Health check endpoint:
+
+http://localhost:3000/health
+
+
+Expected response:
+
+{ "status": "ok", "db": "connected" }
+
+### 6. Open API documentation (Swagger)
+
+Once the server is running, open:
+
+http://localhost:3000/api/docs
+
+### 7. Run the frontend demo
+
+Open the following file directly in a browser:
+
+frontend/index.html
+
+The frontend fetches live data from:
+
+GET /api/campaigns
