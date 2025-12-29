@@ -72,5 +72,5 @@ This satisfies the requirement for a **basic functional web interface** while ke
 
 ### 1. Clone the repository
 ```bash
-git clone <your-repo-url>
+git clone <https://github.com/reallydontcare6/dooh-ad-manager.git>
 cd dooh-ad-manager
