@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+    url      = env("DATABASE_URL")
+
+}
+
+model Screen {
+  id         String   @id @default(uuid())
+  name       String
+  location   String
+  resolution String
+  status     String
+  createdAt  DateTime @default(now())
+
+  campaigns  CampaignScreen[]
+}
+
+model Ad {
+  id              String   @id @default(uuid())
+  title           String
+  mediaUrl        String
+  durationSeconds Int
+  mediaType       String
+  createdAt       DateTime @default(now())
+
+  campaigns       CampaignAd[]
+}
+
+model Campaign {
+  id        String   @id @default(uuid())
+  startTime DateTime
+  endTime   DateTime
+  createdAt DateTime @default(now())
+
+  screens   CampaignScreen[]
+  ads       CampaignAd[]
+}
+
+model CampaignScreen {
+  id         String   @id @default(uuid())
+  campaignId String
+  screenId   String
+
+  campaign  Campaign @relation(fields: [campaignId], references: [id])
+  screen    Screen   @relation(fields: [screenId], references: [id])
+}
+
+model CampaignAd {
+  id         String   @id @default(uuid())
+  campaignId String
+  adId       String
+  playOrder  Int
+
+  campaign  Campaign @relation(fields: [campaignId], references: [id])
+  ad        Ad       @relation(fields: [adId], references: [id])
+}
+
+model ProofOfPlay {
+  id        String   @id @default(uuid())
+  screenId  String
+  adId      String
+  playedAt  DateTime @default(now())
+}
