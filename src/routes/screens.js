@@ -35,6 +35,59 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch screens' });
   }
 });
+router.get("/:id/playlist", async (req, res) => {
+  try {
+    const screenId = req.params.id;
+    const at = req.query.at;
+
+    if (!at) {
+      return res.status(400).json({ error: "Missing 'at' query parameter" });
+    }
+
+    const atTime = new Date(at);
+
+    const campaigns = await prisma.campaign.findMany({
+      where: {
+        startTime: { lte: atTime },
+        endTime: { gte: atTime },
+        screens: {
+          some: {
+            screenId: screenId,
+          },
+        },
+      },
+      include: {
+        ads: {
+          orderBy: { playOrder: "asc" },
+          include: {
+            ad: true,
+          },
+        },
+      },
+    });
+
+    const playlist = campaigns.flatMap((campaign) =>
+      campaign.ads.map((entry) => ({
+        adId: entry.ad.id,
+        title: entry.ad.title,
+        mediaUrl: entry.ad.mediaUrl,
+        durationSeconds: entry.ad.durationSeconds,
+        mediaType: entry.ad.mediaType,
+        playOrder: entry.playOrder,
+      }))
+    );
+
+    res.json({
+      screenId,
+      at: atTime.toISOString(),
+      playlist,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch playlist" });
+  }
+});
+
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
   const { name, location, resolution, status } = req.body;
@@ -55,3 +108,4 @@ router.put('/:id', async (req, res) => {
     res.status(404).json({ error: 'Screen not found' });
   }
 });
+

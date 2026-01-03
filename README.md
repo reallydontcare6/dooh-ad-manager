@@ -46,6 +46,11 @@ This project demonstrates correct data modeling, REST API design, and campaign s
   - Linked ads  
   - Ads ordered by play order  
 
+### Playlist API
+Retrieve the playlist for a specific screen at a given time:
+
+GET /api/screens/{screenId}/playlist?at=ISO_TIMESTAMP
+
 ---
 
 ## Why the Frontend Is Minimal
