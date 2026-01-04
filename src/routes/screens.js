@@ -5,7 +5,7 @@ const prisma = require('../prisma');
 router.post('/', async (req, res) => {
   const { name, location, resolution, status } = req.body;
 
-  // basic validation
+  
   if (!name || !location || !resolution || !status) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
@@ -26,7 +26,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-module.exports = router;
 router.get('/', async (req, res) => {
   try {
     const screens = await prisma.screen.findMany();
@@ -109,3 +108,4 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+module.exports = router;
